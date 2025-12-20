@@ -1,0 +1,17 @@
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  role      Role     @default(STUDENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  assignmentsCreated Assignment[]   @relation("TeacherAssignments")
+  submissions        Submission[]
+}
+
+enum Role {
+  TEACHER
+  STUDENT
+}

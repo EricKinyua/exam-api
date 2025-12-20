@@ -1,0 +1,18 @@
+# Generated
+node_modules/
+dist/
+coverage/
+generated/
+
+# Static
+.github/
+.vscode/
+
+# GCP
+cloudbuild/
+service.yaml
+load-test.yaml
+
+# TXT
+README.md
+CHANGELOG.md

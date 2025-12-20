@@ -1,0 +1,54 @@
+services:
+  postgres:
+    container_name: nest_db
+    image: postgres:17
+    volumes:
+      - nest:/var/lib/postgresql/data
+    networks:
+      backend_network:
+        ipv4_address: 172.40.0.2
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: "nest"
+      POSTGRES_PASSWORD: "nest"
+      POSTGRES_DB: "nest_db"
+      PGDATA: /var/lib/postgresql/data/nest_db/
+  nest:
+    container_name: nest_api
+    build:
+      context: .
+      dockerfile: docker/dev.Dockerfile
+    volumes:
+      - type: bind
+        source: ./src/
+        target: /app/src/
+      - type: bind
+        source: ./package.json
+        target: /app/package.json
+      - type: bind
+        source: ./prisma/
+        target: /app/prisma/
+      - type: bind
+        source: ./tsconfig.json
+        target: /app/tsconfig.json
+    networks:
+      backend_network:
+        ipv4_address: 172.40.0.3
+    depends_on:
+      - postgres
+    ports:
+      - 3000:3000
+    environment:
+      PORT: 3000
+      NODE_ENV: 'local'
+      WORKSPACE: 'dev'
+      DATABASE_URL: 'postgresql://nest:nest@172.40.0.2:5432/nest_db?connection_limit=1'
+volumes:
+  nest:
+networks:
+  backend_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.40.0.0/16
