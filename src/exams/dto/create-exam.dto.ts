@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 
 export class CreateChoiceDto {
-  @ApiProperty()  
+  @ApiProperty()
   @IsString()
   text: string;
 
@@ -34,7 +34,7 @@ export class CreateQuestionDto {
   @Min(0)
   order: number;
 
-  @ApiProperty({type: [CreateChoiceDto]})
+  @ApiProperty({ type: [CreateChoiceDto] })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateChoiceDto)
@@ -42,7 +42,7 @@ export class CreateQuestionDto {
 }
 
 export class CreateAssignmentDto {
-@ApiProperty()
+  @ApiProperty()
   @IsString()
   title: string;
 
@@ -50,7 +50,7 @@ export class CreateAssignmentDto {
   @IsString()
   description?: string;
 
-  @ApiProperty({type: [CreateQuestionDto]})
+  @ApiProperty({ type: [CreateQuestionDto] })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateQuestionDto)
@@ -59,7 +59,7 @@ export class CreateAssignmentDto {
 
 // src/assignments/dto/submit-assignment.dto.ts
 export class AnswerDto {
-  @ApiProperty()  
+  @ApiProperty()
   @IsString()
   questionId: string;
 

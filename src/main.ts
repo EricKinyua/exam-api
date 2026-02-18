@@ -17,7 +17,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 const SWAGGER_PATH = '/swagger';
 
 export const setupSwagger = (app: INestApplication) => {
- 
   const docConfig = new DocumentBuilder()
     .setTitle('EXAM API')
     .setDescription('A full documentation of Exam API')

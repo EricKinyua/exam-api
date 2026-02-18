@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import config, { validationSchema } from './utils/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { LoggerModule } from './logging/logging.module';
+import { AuthModule } from './auth/auth.module';
 import { ExamsModule } from './exams/exams.module';
 
 @Module({
@@ -21,6 +22,7 @@ import { ExamsModule } from './exams/exams.module';
     }),
     PrismaModule,
     LoggerModule,
+    AuthModule,
     ExamsModule,
   ],
   controllers: [AppController],

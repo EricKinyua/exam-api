@@ -57,60 +57,59 @@ export class ExamsService {
     }
   }
 
-  async getAllAssignments(){
+  async getAllAssignments() {
     try {
       const assignments = await this._prismaService.assignment.findMany({
         include: {
-        teacher: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
+          teacher: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+          _count: {
+            select: {
+              questions: true,
+              submissions: true,
+            },
           },
         },
-        _count: {
-          select: {
-            questions: true,
-            submissions: true,
-          },
+        orderBy: {
+          createdAt: 'desc',
         },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
       });
-      return assignments
+      return assignments;
     } catch (error) {
       throw error;
     }
   }
 
-  async getAssignment(assignmentId: string){
+  async getAssignment(assignmentId: string) {
     try {
       const assignment = await this._prismaService.assignment.findUnique({
-      where: { id: assignmentId },
-      include: {
-        questions: {
-          include: {
-            choices: {
-              select: {
-                id: true,
-                text: true,
-                order: true,
-               
-              },
-              orderBy: {
-                order: 'asc',
+        where: { id: assignmentId },
+        include: {
+          questions: {
+            include: {
+              choices: {
+                select: {
+                  id: true,
+                  text: true,
+                  order: true,
+                },
+                orderBy: {
+                  order: 'asc',
+                },
               },
             },
-          },
-          orderBy: {
-            order: 'asc',
+            orderBy: {
+              order: 'asc',
+            },
           },
         },
-      },
-    });
-    return assignment;
+      });
+      return assignment;
     } catch (error) {
       throw error;
     }

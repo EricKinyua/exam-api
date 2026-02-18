@@ -19,6 +19,8 @@ services:
     build:
       context: .
       dockerfile: docker/dev.Dockerfile
+    env_file:
+      - .env
     volumes:
       - type: bind
         source: ./src/
@@ -44,6 +46,7 @@ services:
       NODE_ENV: 'local'
       WORKSPACE: 'dev'
       DATABASE_URL: 'postgresql://nest:nest@172.40.0.2:5432/nest_db?connection_limit=1'
+      # JWT_SECRET and JWT_EXPIRATION come from env_file: .env
 volumes:
   nest:
 networks:

@@ -4,7 +4,6 @@ import {
   Body,
   HttpCode,
   Res,
-  Req,
   HttpStatus,
   Get,
   Param,
@@ -23,12 +22,12 @@ export class ExamsController {
   @HttpCode(201)
   async createAssignment(
     @Res() res: Response,
-    @Req() req: any,
     @Body() createAssignmentDto: CreateAssignmentDto,
   ) {
-    const  id  = '8e3af025-2802-4000-bcb7-419a79a76db6';
+    // TODO: replace with authenticated user id when JWT is implemented
+    const teacherId = '8e3af025-2802-4000-bcb7-419a79a76db6';
     const assignment = await this.examsService.createAssignment(
-      id,
+      teacherId,
       createAssignmentDto,
     );
 
@@ -39,9 +38,9 @@ export class ExamsController {
     });
   }
 
-    @Get()
-    @HttpCode(200)
-    @ApiOperation({ summary: 'Fetches all assignments' })
+  @Get()
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Fetches all assignments' })
   async getAllAssignments(@Res() res: Response) {
     const assignments = await this.examsService.getAllAssignments();
 
@@ -53,8 +52,8 @@ export class ExamsController {
   }
 
   @Get(':id')
-    @HttpCode(200)
-    @ApiOperation({ summary: 'Fetches a single assignment' })
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Fetches a single assignment' })
   async getAssignment(@Res() res: Response, @Param('id') id: string) {
     const assignment = await this.examsService.getAssignment(id);
 
