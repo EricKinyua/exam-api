@@ -18,7 +18,7 @@ export class AuthController {
 
   @Post('sign-in')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Sign in and return user info' })
+  @ApiOperation({ summary: 'Sign in and receive a JWT access token' })
   async signIn(@Body() signInDto: SignInDto) {
     return this.authService.signIn(signInDto);
   }

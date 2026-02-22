@@ -3,10 +3,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../prisma/prisma.service';
 import { SignUpDto, SignUpRole } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
+import { JwtPayload } from './strategies/jwt.strategy';
 import { Role, User } from '../../generated/prisma/client';
 
 const SALT_ROUNDS = 10;
@@ -21,9 +23,14 @@ export interface AuthUserResponse {
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  async signUp(dto: SignUpDto): Promise<{ user: AuthUserResponse }> {
+  async signUp(
+    dto: SignUpDto,
+  ): Promise<{ user: AuthUserResponse; access_token: string }> {
     const existing = await this.prisma.user.findUnique({
       where: { email: dto.email },
     });
@@ -44,12 +51,21 @@ export class AuthService {
       },
     });
 
+    const access_token = this.jwtService.sign({
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+    } as JwtPayload);
+
     return {
       user: this.toUserResponse(user),
+      access_token,
     };
   }
 
-  async signIn(dto: SignInDto): Promise<{ user: AuthUserResponse }> {
+  async signIn(
+    dto: SignInDto,
+  ): Promise<{ user: AuthUserResponse; access_token: string }> {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
     });
@@ -62,8 +78,15 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
+    const access_token = this.jwtService.sign({
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+    } as JwtPayload);
+
     return {
       user: this.toUserResponse(user),
+      access_token,
     };
   }
 

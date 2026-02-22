@@ -4,14 +4,20 @@ import {
   Body,
   HttpCode,
   Res,
+  Req,
   HttpStatus,
   Get,
   Param,
+  UseGuards,
 } from '@nestjs/common';
 import { ExamsService } from './exams.service';
 import { Response } from 'express';
 import { CreateAssignmentDto } from './dto/create-exam.dto';
 import { ApiOperation } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { JwtUser } from '../auth/strategies/jwt.strategy';
 //import { UpdateExamDto } from './dto/update-exam.dto';
 
 @Controller('exams')
@@ -19,13 +25,15 @@ export class ExamsController {
   constructor(private readonly examsService: ExamsService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('TEACHER')
   @HttpCode(201)
   async createAssignment(
     @Res() res: Response,
+    @Req() req: { user: JwtUser },
     @Body() createAssignmentDto: CreateAssignmentDto,
   ) {
-    // TODO: replace with authenticated user id when JWT is implemented
-    const teacherId = '8e3af025-2802-4000-bcb7-419a79a76db6';
+    const teacherId = req.user.id;
     const assignment = await this.examsService.createAssignment(
       teacherId,
       createAssignmentDto,

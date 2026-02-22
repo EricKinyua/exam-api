@@ -5,6 +5,8 @@ export default () => ({
   NODE_ENV: process.env.NODE_ENV,
   WORKSPACE: process.env.WORKSPACE,
   DATABASE_URL: process.env.DATABASE_URL,
+  JWT_SECRET: process.env.JWT_SECRET,
+  JWT_EXPIRATION: process.env.JWT_EXPIRATION ?? '7d',
 });
 
 export const validationSchema = Joi.object({
@@ -19,4 +21,8 @@ export const validationSchema = Joi.object({
 
   // Database
   DATABASE_URL: Joi.string().required(),
+
+  // JWT
+  JWT_SECRET: Joi.string().required(),
+  JWT_EXPIRATION: Joi.string().default('7d'),
 });
